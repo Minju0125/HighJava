@@ -1,4 +1,4 @@
-package collection;
+package kr.or.ddit.basic;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,6 +64,7 @@ class Phone {
 	}
 
 	Phone(String name, String tel, String addr) {
+		super(); //부모클래스의 생성자를 호출하기 위해
 		this.name = name;
 		this.tel = tel;
 		this.addr = addr;
@@ -142,10 +143,10 @@ class Phone {
 
 	// 전화번호 등록 메소드
 	public void addPhoneNumber() {
-//		 * 새롭게 등록할 전화번호 정보를 입력하세요.
-//		 * 이름>> 홍길동
-//		 * 전화번호 >> 010-1234-5678
-//		 * 주소>> 대전시 중구 오류동
+//       * 새롭게 등록할 전화번호 정보를 입력하세요.
+//       * 이름>> 홍길동
+//       * 전화번호 >> 010-1234-5678
+//       * 주소>> 대전시 중구 오류동
 		System.out.println();
 		System.out.println("-------[전화번호 신규등록]-------");
 
@@ -158,7 +159,7 @@ class Phone {
 
 		person.put(name, new Phone(name, tel, addr));
 		System.out.println();
-//		System.out.println(person.toString());
+//      System.out.println(person.toString());
 		System.out.println("♥전화번호 등록 완료 !");
 		System.out.println();
 		System.out.println("[신규정보]");
@@ -183,7 +184,7 @@ class Phone {
 		System.out.println("■ 주소 : " + person.get(name).addr);
 		System.out.println();
 		System.out.println("정보를 삭제하시겠습니까?");
-		System.out.println("1.예	2.아니오(메뉴로 돌아가기)");
+		System.out.println("1.예   2.아니오(메뉴로 돌아가기)");
 		int answer = sc.nextInt();
 		while (true) {
 			switch (answer) {
@@ -210,7 +211,7 @@ class Phone {
 		System.out.println("■ 주소 : " + person.get(name).addr);
 		System.out.println();
 		System.out.println("정보를 변경하시겠습니까?");
-		System.out.println("1.예	2.아니오(메뉴로 돌아가기)");
+		System.out.println("1.예   2.아니오(메뉴로 돌아가기)");
 		int answer = sc.nextInt();
 		while (true) {
 			switch (answer) {
