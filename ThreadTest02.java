@@ -7,20 +7,20 @@ public class ThreadTest02 {
 		/*
 		 * Thread를 사용하는 방법
 		 * 
-		 * 방법1) - Thread 클래스를 상속한 class 를 작성한 후 이 class의 인스턴스를 생성한 후 이 인스턴스의 start()
-		 * 메서드를 호출해서 실행한다.
+		 * 방법1)
+		 * Thread 클래스를 상속한 class 를 작성한 후
+		 * 이 class의 인스턴스를 생성한 후 이 인스턴스의 start() 메서드를 호출해서 실행한다.
+		 * 여기서 start() 메소드가 아닌 run() 을 호출하면 쓰레드를 실행하지 않음.
 		 */
 		MyThread01 th1 = new MyThread01();
 		th1.start();
 		
-		//여기서 start() 메소드가 아닌 run() 을 호출하면 쓰레드를 실행하지 않음.
-		//start() ?
-		
-
 		/*
-		 * 방법2) - Runnable 인터페이스를 구현한 class를 작성한 후 이 class의 인스턴스를 생성하고 이 인스턴스를, Thread
-		 * 클래스의 인스턴스를 생성할 때 인수값으로 넘겨준다. 그리고 이 때 생성된 Thread 클래스의 인스턴스의 start() 메서드를 호출해서
-		 * 실행한다.
+		 * 방법2)
+		 * Runnable 인터페이스를 구현한 class를 작성한 후,
+		 * 이 class의 인스턴스를 생성하고 이 인스턴스를,
+		 * Thread 클래스의 인스턴스를 생성할 때 인수값으로 넘겨준다.
+		 * 그리고 이 때 생성된 Thread 클래스의 인스턴스의 start() 메서드를 호출해서 실행한다.
 		 */
 		MyThread02 r2 = new MyThread02();
 		Thread th2 = new Thread(r2);

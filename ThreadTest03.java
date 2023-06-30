@@ -38,3 +38,5 @@ class MyRunner implements Runnable {
 		System.out.println("합계 : " + sum);
 	}
 }
+
+
