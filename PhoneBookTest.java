@@ -1,7 +1,15 @@
 package kr.or.ddit.basic.stream;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -76,17 +84,28 @@ import java.util.Set;
         0. 프로그램 종료
         번호입력 >> 1
 
-
-
-
 */
 public class PhoneBookTest {
 	private Scanner sc;
 	private HashMap<String, Phone> phoneBookMap;
+	// 1)맵에 있는 데잍터를 하나하나 꺼내서 폰 객체로 저장하는 방법
+	// 2)맵 자체를 저장하는 방법
+	private final String filename = "d:/d_other/phoneBookData.dat";
 
+	
+	//데이터가 변경되었는지 여부를 나타내는 변수 선언
+	private boolean dataChange; //데이터가 변경되면 true 로 변경된다.
+	
+	
+	// 생성자 (이 객체에서 가장 먼저 실행되는 곳)
 	public PhoneBookTest() {
 		sc = new Scanner(System.in);
-		phoneBookMap = new HashMap<String, Phone>();
+		phoneBookMap = load();
+
+		if (phoneBookMap == null) {
+			phoneBookMap = new HashMap<String, Phone>();
+
+		}
 	}
 
 	// 메뉴를 출력하고 작업 번호를 입력받아 반환하는 메서드
@@ -136,6 +155,9 @@ public class PhoneBookTest {
 				save();
 				break;
 			case 0:// 종료
+				if(dataChange) { //if(dataChange ==true)로 써도됨.
+					save();
+				}
 				System.out.println("프로그램을 종료합니다.");
 				return;
 			default:
@@ -146,31 +168,78 @@ public class PhoneBookTest {
 		}
 	}
 
-	//전화번호를 저장하는 메소드
-	private void save() {
-		System.out.println();
-		System.out.println("저장할 전화번호 정보를 입력하세요...");
-		System.out.print("이름 >> ");
-		String name = sc.next();
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	// 파일에 저장된 전화번호 정보를 읽어와서 Map 에 셋팅한 후 반환하는 메서드
+	private HashMap<String, Phone> load() {
+		HashMap<String, Phone> pMap = null; // 읽어오은 데이터가 저장될 변수
+		File file = new File(filename);
+		if (!file.exists()) { // 저장된 파일이 없으면...
+			System.out.println("");
+			return null;
+
+		}
+
+		// 객체가 저장된 파일을 읽어올 스트림 객체 변수 선언
+		ObjectInputStream oin = null;
+		try {
+			oin = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+
+//			저장을 '방법1'로 했을 때...
+//			pMap = (HashMap<String, Phone>)oin.readObject();
+
+			// 저장을 '방법2'로 했을 때...
+			Object pObj; // 읽어온 Phone객체가 저장될 변수 선언
+
+			pMap = new HashMap<String, Phone>();
+
+			while ((pObj = oin.readObject()) != null) {
+				Phone p = (Phone) pObj;
+				String name = p.getName();
+				pMap.put(name, p);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return pMap;
 	}
-	
-	
-	
-	
-	
+
+	// 전화번호를 저장하는 메소드
+	private void save() {
+
+		ObjectOutputStream oout = null;
+
+		try {
+			// 객체 출력용 스트림 객체 생성
+			oout = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)));// 버퍼기능도 사용하기 위해 !
+
+			// 객체를 저장하는 방법1 => 화번호 정보가 저장된 Map 객체를 저장한다.
+//			oout.writeObject(phoneBookMap);
+
+			// 객체를 저장하는 방법 2 => Map에 저장된 Phone 객체를 하나씩 저장한다.
+			for (String name : phoneBookMap.keySet()) {
+				Phone p = phoneBookMap.get(name);
+				oout.writeObject(p);
+			}
+			oout.writeObject(null); // 마지막을 나타내는 null 값 저장
+
+			System.out.println("저장이 완료되었습니다...");
+			dataChange =false; //저장 후 save나 insert, update, delete 하기 전까지 false=> if문에서 걸림
+		} catch (IOException e) {
+			e.printStackTrace();
+
+		} finally {
+			if (oout != null)
+				try {
+					oout.close();
+				} catch (IOException e) {
+				}
+		}
+
+	}
+
 	// 전화번호 정보를 검색하는 메서드
 	private void search() {
 		System.out.println();
@@ -217,6 +286,7 @@ public class PhoneBookTest {
 		phoneBookMap.put(name, new Phone(name, newTel, newAddr));
 
 		System.out.println(name + "씨의 전화번호 정보를 변경했습니다...");
+		dataChange = true;
 	}
 
 	// 전화번호 정보를 삭제하는 메서드
@@ -233,6 +303,7 @@ public class PhoneBookTest {
 
 		phoneBookMap.remove(name);
 		System.out.println(name + "씨의 전화번호 정보를 삭제했습니다...");
+		dataChange = true;
 	}
 
 	// 전체 자료를 출력하는 메서드
@@ -287,6 +358,8 @@ public class PhoneBookTest {
 //      phoneBookMap.put(name, p);
 		phoneBookMap.put(name, new Phone(name, tel, addr));
 		System.out.println(name + "씨 전화번호 등록 완료!!!");
+		
+		dataChange = true;
 	}
 
 	public static void main(String[] args) {
@@ -474,7 +547,7 @@ public class PhoneBookTest {
 
 }
 
-class Phone {
+class Phone implements Serializable {
 	private String name;
 	private String tle;
 	private String addr;
