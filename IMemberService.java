@@ -1,6 +1,7 @@
 package kr.ddit.mvc.service;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.ddit.mvc.vo.MemberVO;
 
@@ -57,5 +58,16 @@ public interface IMemberService {
 	 * @return 검색된 회원 아이디 개수
 	 */
 	public int getMemberCount(String memId);
+	
+	/**
+	 * 회원ID, 수정할 컬럼명, 수정할 데이터를 갖는 Map객체를 매개변수로 받아서\
+	 * 회원정보를 수정하는 메서드
+	 * (key 값 정보 ==> 회원 ID(memId), 수정할컬럼명(field), 수정할 데이터(data)
+	 * 
+	 * @param paraMap 수정할 회원 정보가 저장된 Map 객체
+	 * @return 작업성공 : 1, 작업 실패 : 0
+	 */
+	public int updateMember2(Map<String, String> paraMap);
+
 
 }
