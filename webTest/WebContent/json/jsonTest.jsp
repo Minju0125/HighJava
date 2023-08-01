@@ -76,8 +76,60 @@ $(function(){ //현재 페이지를 웹브라우저가 읽어서 DOM 객체로 �
 			},
 			dataType : "json" //응답으로 온 데이터 타입 지정 //success 를 통해 저장되는 데이터 타입
 			
-		})
-	})
+		});
+	});
+	
+	//객체 처리
+	$("#listBtn").on("click", function(){
+		$.ajax({ 
+			//---서버로 요청할 때 필요한 정보
+			url : "<%=request.getContextPath()%>/jsonController.do", //요청할 주소
+			type : "post",
+			data : "choice=list", //서버로 보낼 데이터 (url에 지정한 주소로 요청을 하면, 서블릿으로 가는데 거기로 보낼 데이터)
+
+			//-- 응답으로 올 때 지정할 정보
+			success : function(data){ 
+				//jsonData => [{"num":100,"name":"강감찬"},{"num":200,"name":"이순신"},{"num":300,"name":"성춘향"},{"num":400,"name":"이몽룡"}] <- 얘네가 v
+				//맨 앞 대괄호 => 배열
+				let htmlCode = "";
+				$.each(data, function(i,v){
+					htmlCode += i + "번째 자료<br>";
+					htmlCode += "번호 : " + v.num + "<br>";
+					htmlCode += "이름 : " + v.name + "<hr>";
+				});
+				$("#result").html(htmlCode);
+			},
+			error : function(){
+				alert("오류...")
+			},
+			dataType : "json" //응답으로 온 데이터 타입 지정 //success 를 통해 저장되는 데이터 타입
+			
+		});
+	});
+	
+	//Map 데이터 처리
+	$("#mapBtn").on("click", function(){
+		$.ajax({ 
+			//---서버로 요청할 때 필요한 정보
+			url : "<%=request.getContextPath()%>/jsonController.do", //요청할 주소
+			type : "post",
+			data : "choice=map", //서버로 보낼 데이터 (url에 지정한 주소로 요청을 하면, 서블릿으로 가는데 거기로 보낼 데이터)
+
+			//-- 응답으로 올 때 지정할 정보
+			success : function(data){ 
+				let htmlCode = "이름 : " + data.name + "<br>";
+				htmlCode += "전화번호 : " + data.tel + "<br>";
+				htmlCode += "주소 : " + data.addr + "<hr>";
+				$("#result").html(htmlCode);
+			},
+			error : function(){
+				alert("오류...")
+			},
+			dataType : "json" //응답으로 온 데이터 타입 지정 //success 를 통해 저장되는 데이터 타입
+			
+		});
+	});
+	
 });
 </script>
 </head>
