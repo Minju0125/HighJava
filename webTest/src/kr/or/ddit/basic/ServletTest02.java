@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 
 */
 
-@WebServlet(description = "애노테이션을 이용한 서블릿 예제", urlPatterns = { "/servletTest02.do" })
 public class ServletTest02 extends HttpServlet {
 
 	// doGet() 메서드 ==> GET 방식의 요청을 처리하는 메서드
